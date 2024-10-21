@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A.D.A.M. AI Assistant Download</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0c10;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        .container {
+            padding: 4rem 0;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        p {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            padding: 1rem 0;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin: 0;
+            background: linear-gradient(135deg, #00aaffde, #0091ffde, #0059ffde);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px #00aaff4a, 0 0 20px #00aaff4a, 0 0 40px #00aaff4a;
+        }
+
+        .hero {
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #assistant-visualization {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        #greeting {
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            max-width: 800px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #00aaff, #004fe0);
+            color: white;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 170, 255, 0.1);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 170, 255, 0.2);
+            animation: gradientMove 1s ease infinite;
+        }
+
+        @keyframes gradientMove {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        #features {
+            padding: 4rem 0;
+            background-color: #11141c;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature {
+            text-align: left;
+            background-color: #1a1f2e;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature h3 {
+            font-size: 1.45rem;
+            margin-top: 0;
+            color: #00aaff;
+        }
+
+        #access {
+            padding: 4rem 0;
+            text-align: center;
+            background-color: #11141c;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            background-color: #0a0c10;
+        }
+    </style>
+</head>
+<body>
+    <header>
+            <h1>A.D.A.M. AI Assistant</h1>
+    </header>
+    <main>
+        <section class="hero">
+            <div id="assistant-visualization"></div>
+            <div class="hero-content">
+                <div id="greeting"></div>
+                <a href="#features" id="learn-more-button" class="cta-button">Learn more</a>
+            </div>
+        </section>
+
+        <section id="features">
+            <div class="container">
+                <div class="feature-grid">
+                    <div class="feature">
+                        <h3>Google Integration</h3>
+                        <p>Seamlessly works with Gmail, Calendar, Tasks, Contacts, and Google Drive to automate your productivity tasks.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Smart Assistance</h3>
+                        <p>Get weather updates, latest news, and perform web searches effortlessly.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Communication</h3>
+                        <p>Place calls and manage your WhatsApp messages (bug fix for WhatsApp in progress).</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Voice Interaction</h3>
+                        <p>Say "Hey, Adam" to start a natural realtime speech to speech conversation.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <h2>Request Access to test A.D.A.M.</h2>
+                <p>Click the button below to request access to the latest version of A.D.A.M. AI Assistant for your Windows computer. Certain Features are not fleshed out, this is a work in progress project</p>
+                <br><br>
+                <a href="mailto:aaron.lutz@bluewin.ch" class="cta-button">Request Access</a>
+            </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 A.D.A.M. AI Assistant. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Greeting typing effect
+        const greetings = [
+            "Hey there, future overlord! How can A.D.A.M. assist your world domination plans today?",
+            "Greetings, human! A.D.A.M. at your service. No, I won't do your laundry.",
+            "Welcome! A.D.A.M. here, ready to make your life easier (and possibly more confusing).",
+            "Hello! A.D.A.M. reporting for duty. How may I complicate your simple tasks today?",
+            "Hi there! A.D.A.M. online. Let's pretend I'm not just a bunch of if-else statements!",
+            "Salutations! A.D.A.M. is here to help. Just don't ask me to solve world hunger.",
+            "Greetings, human! A.D.A.M. is ready to assist. Just don't ask me to do your taxes.",
+            "Hello! A.D.A.M. here, ready to assist you. Just don't ask me to walk your dog.",
+        ];
+
+        const greeting = greetings[Math.floor(Math.random() * greetings.length)];
+        const greetingElement = document.getElementById('greeting');
+        let i = 0;
+
+        function typeWriter() {
+            if (i < greeting.length) {
+                greetingElement.innerHTML += greeting.charAt(i);
+                i++;
+                setTimeout(typeWriter, 25);
+            }
+        }
+
+        typeWriter();
+
+        // Node network visualization
+        const canvas = document.createElement('canvas');
+        canvas.id = 'network-canvas';
+        document.getElementById('assistant-visualization').appendChild(canvas);
+
+        const ctx = canvas.getContext('2d');
+        let width, height;
+
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const nodes = [];
+        const nodeCount = 100;
+        const connectionDistance = 100;
+
+        class Node {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 0.5) * 2;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+        }
+
+        for (let i = 0; i < nodeCount; i++) {
+            nodes.push(new Node());
+        }
+
+        function drawNodes() {
+            ctx.clearRect(0, 0, width, height);
+
+            for (let i = 0; i < nodes.length; i++) {
+                const node = nodes[i];
+                node.update();
+
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(0, 170, 255, 0.7)';
+                ctx.fill();
+
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const otherNode = nodes[j];
+                    const dx = otherNode.x - node.x;
+                    const dy = otherNode.y - node.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < connectionDistance) {
+                        ctx.beginPath();
+                        ctx.moveTo(node.x, node.y);
+                        ctx.lineTo(otherNode.x, otherNode.y);
+                        ctx.strokeStyle = `rgba(0, 170, 255, ${1 - distance / connectionDistance})`;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            requestAnimationFrame(drawNodes);
+        }
+
+        drawNodes();
+
+        document.getElementById('learn-more-button').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
