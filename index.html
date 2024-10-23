@@ -244,6 +244,7 @@
             }
 
             .hero-content {
+                margin-top: -30%;
                 width: 95%;
             }
 
@@ -268,6 +269,10 @@
                 grid-template-columns: 1fr;  /* Single column on mobile */
                 gap: 1rem;
                 max-height: none;  /* Remove max-height constraint */
+            }
+
+            .feature-grid > div:hover {
+                transform: none;
             }
 
             .feature {
@@ -457,7 +462,7 @@
                         i = 0;
                         typeWriter();
                     }, 500);
-                }, 1500);
+                }, 750);
             }
         }
 
