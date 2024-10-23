@@ -6,6 +6,7 @@
     <title>A.D.A.M. AI Assistant Download</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
 
         body {
             margin: 0;
@@ -15,14 +16,19 @@
             line-height: 1.6;
         }
 
+        section {
+            padding-top: 5rem;
+            padding-bottom: 5rem;
+        }
+
         .container {
-            padding: 4rem 0;
+            padding: 5rem 0;
             max-width: 1200px;
             margin: 0 auto;
             text-align: center;
         }
 
-        p {
+        .container > p {
             max-width: 800px;
             margin: 0 auto;
         }
@@ -127,6 +133,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
+            max-height: 350px;
         }
 
         .feature {
@@ -135,30 +142,101 @@
             padding: 2rem;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1), height 0s;
+            height: auto;
+            max-height: 200px; /* Initial max-height for non-expanded state */
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-grid > div:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature:hover .expand-button {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0.5s; /* Adjust the delay as needed */
+        }
+
+        .feature.expanded {
+            text-align: left;
+            grid-column: 1 / -1;
+            margin: 1rem 0;
+            height: auto;
+            max-height: 800px; /* Increased max-height for expanded state */
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feature:not(.expanded) {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Add transition for feature visibility */
+        .feature.hidden {
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+        }
+
+        .feature.visible {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .expand-button {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, #00aaff, #004fe0);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(10px);
             transition: all 0.3s ease;
         }
 
-        .feature:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        .expand-button i {
+            color: white;
+            font-size: 1.2rem;
         }
 
-        .feature h3 {
-            font-size: 1.45rem;
-            margin-top: 0;
-            color: #00aaff;
+        .feature-content {
+            transition: all 0.5s ease;
         }
 
-        #access {
-            padding: 4rem 0;
-            text-align: center;
-            background-color: #11141c;
+        .expanded-content {
+            max-height: 0;
+            opacity: 0;
+            transition: all 0.5s ease;
+            overflow: hidden;
         }
 
-        footer {
-            text-align: center;
-            padding: 2rem 0;
-            background-color: #0a0c10;
+        .feature.expanded .expanded-content {
+            max-height: 500px;
+            opacity: 1;
+            margin-top: 1rem;
+        }
+
+        #greeting {
+            height: 8rem;
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        #greeting.fade-out {
+            opacity: 0;
         }
         @media (max-width: 768px) {
             .container {
@@ -172,6 +250,55 @@
             #greeting {
                 font-size: 1.5rem;
                 height: 8rem;
+            }
+
+            .expand-button {
+                opacity: 1;  /* Always visible on mobile */
+                transform: translateY(0);
+                width: 36px;  /* Slightly smaller on mobile */
+                height: 36px;
+            }
+
+            .feature:hover .expand-button {
+                transform: scale(1.1);  /* Simple scale effect on touch */
+            }
+
+            /* New mobile-specific feature styles */
+            .feature-grid {
+                grid-template-columns: 1fr;  /* Single column on mobile */
+                gap: 1rem;
+                max-height: none;  /* Remove max-height constraint */
+            }
+
+            .feature {
+                max-width: 100%;
+                margin: 0 auto;
+            }
+
+            .feature.expanded {
+                grid-column: auto;  /* Reset grid column */
+                margin: 1rem auto;
+            }
+
+            .feature.expanded .expanded-content {
+                max-height: none;  /* Allow content to determine height */
+            }
+
+            .feature.hidden {
+                opacity: 0;
+                transform: translateY(20px);  /* Slide up/down instead of scale */
+                pointer-events: none;
+                transition: opacity 0.6s ease, transform 0.6s ease;
+            }
+
+            .feature.visible {
+                opacity: 1;
+                transform: translateY(0);
+                transition: opacity 0.6s ease 0.3s, transform 0.6s ease 0.3s;
+            }
+
+            .feature.expanded {
+                transform: translateY(0);  /* Ensure no Y translation when expanded */
             }
         }
     </style>
@@ -191,36 +318,90 @@
         <section id="features">
             <div class="container">
                 <h2>Who is A.D.A.M.?</h2>
-                <p>A.D.A.M. is the first and most sophisticated automated digital assistant mainframe. Utilizing state-of-the-art AI technologies integrated with Google Workspace applications, web search engines, and communication platforms, A.D.A.M. performs your tedious tasks in an instant — be it with a touch of sarcasm.</p>
+                <p>A.D.A.M. (Automated Digital Assistant Mainframe) represents what is possible with AI assistance technology. Currently in pre-alpha testing, this  project aims to seamlessly integrate state-of-the-art AI with Google Workspace, advanced search capabilities, and modern communication platforms. While still in early development, A.D.A.M. already demonstrates remarkable capabilities in task automation, enhanced by natural voice interactions and a uniquely engaging personality.</p>
             </div>
             <div class="container">
                 <div class="feature-grid">
                     <div class="feature">
-                        <h3>Google Integration</h3>
-                        <p>Seamlessly works with Gmail, Calendar, Tasks, Contacts, and Google Drive to automate your productivity tasks.</p>
+                        <div class="feature-content">
+                            <h3>Google Workspace Integration</h3>
+                            <p>Seamlessly automate your daily workflow across Gmail, Calendar, Tasks, Contacts, and Drive.</p>
+                        </div>
+                        <button class="expand-button">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <div class="expanded-content">
+                            <p>Experience next-level productivity with A.D.A.M.'s deep integration into Google Workspace:</p>
+                            <ul>
+                                <li>Retrieve, send or delete emails including attachments</li>
+                                <li>Retrieve, edit, create or delete events including participant invitations</li>
+                                <li>Retrieve, edit, create or delete tasks</li>
+                                <li>Retrieve, edit, create and delete contacts. Also used to automatically rertrieve contact details when you need to reach out to someone</li>
+                                <li>Upload, download, move, rename or delete your files and folders in Drive</li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="feature">
-                        <h3>Smart Assistance</h3>
-                        <p>Get weather updates, latest news, and perform web searches effortlessly.</p>
+                        <div class="feature-content">
+                            <h3>Intelligent Information Access</h3>
+                            <p>Get instant access to weather updates, breaking news, and powerful web search capabilities.</p>
+                        </div>
+                        <button class="expand-button">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <div class="expanded-content">
+                            <p>Stay informed and up-to-date with A.D.A.M.'s comprehensive information services:</p>
+                            <ul>
+                                <li>Personalized news curation based on your interests</li>
+                                <li>Advanced web search with context awareness</li>
+                                <li>Information synthesis from multiple sources</li>
+                                <li>Real-time weather forecasts and alerts</li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="feature">
-                        <h3>Communication</h3>
-                        <p>Place calls and manage your WhatsApp messages (bug fix for WhatsApp in progress).</p>
+                        <div class="feature-content">
+                            <h3>Enhanced Communication</h3>
+                            <p>Manage calls and messages across platforms with unprecedented ease.</p>
+                        </div>
+                        <button class="expand-button">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <div class="expanded-content">
+                            <p>Transform your communication experience with A.D.A.M.'s integrated features:</p>
+                            <ul>
+                                <li>Seamless call placing and scheduling. Uses websearch, contacts or context to find the phone number to call.</li>
+                                <li>WhatsApp message handling from you own WhatsApp account (currently being optimized)</li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="feature">
-                        <h3>Voice Interaction</h3>
-                        <p>Say "Hey, Adam" to start a natural realtime speech to speech conversation.</p>
+                        <div class="feature-content">
+                            <h3>Natural Voice Interaction</h3>
+                            <p>Engage in fluid, natural conversations with just a "Hey, Adam" command.</p>
+                        </div>
+                        <button class="expand-button">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <div class="expanded-content">
+                            <p>Experience the future of AI interaction with A.D.A.M.'s voice capabilities:</p>
+                            <ul>
+                                <li>Natural language processing for human-like conversations.</li>
+                                <li>Real-time speech-to-speech responses</li>
+                                <li>Responds to emotions and intonation and can adapt the voice on the fly.</li>
+                                <li>Multi-turn conversation handling. Interrupt at any time.</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="container">
-                <h2>Request Access to test A.D.A.M.</h2>
-                <p>Click the button below to request access to the latest version of A.D.A.M. for your Windows computer. Certain Features are not fleshed out, this is work in progress.</p>
+                <h2>Join the Pre-Alpha Testing Phase</h2>
+                <p>Be among the first to experience A.D.A.M.'s capabilities on your Windows computer. While some features are still in development, your feedback will help shape the future of A.D.A.M. Currently accepting a limited number of pre-alpha testers.</p>
                 <br><br>
-                <a href="mailto:aaron.lutz@bluewin.ch?subject=Test Acces for A.D.A.M.&body=Hello, I would like to sign up for test access for the A.D.A.M. AI assistant. My Gmail address for the test account is: " class="cta-button">Request Access</a>
+                <a href="mailto:aaron.lutz@bluewin.ch?subject=Pre-Alpha Test Access Request - A.D.A.M.&body=Hello,%0D%0A%0D%0AI would like to participate in the pre-alpha testing phase of the A.D.A.M. AI assistant.%0D%0A%0D%0AGoogle Account (Email):%0D%0A%0D%0AIntended Use Case:%0D%0A%0D%0ABest regards," class="cta-button">Request Pre-Alpha Access</a>
             </div>
-            <br>
-            <br>
+        </section>
     </main>
 
     <footer>
@@ -230,30 +411,123 @@
     </footer>
 
     <script>
-        // Greeting typing effect
-        const greetings = [
-            "Hey there, future overlord! How can I assist your world domination plans today?",
-            "Greetings, human! A.D.A.M. at your service. No, I won't do your laundry.",
-            "Hello! A.D.A.M. reporting for duty. How may I complicate your simple tasks today?",
-            "Hi! A.D.A.M. online. Let's pretend I'm not just a bunch of if-else statements!",
-            "Salutations! A.D.A.M. is here to help. Just don't ask me to solve world hunger.",
-            "Greetings, human! A.D.A.M. is ready to assist. Just don't ask me to do your taxes.",
-            "Hello! A.D.A.M. here, ready to assist you. Just don't ask me to walk your dog.",
+        // Updated greetings with two parts
+        const greetingPairs = [
+            {
+                part1: "Hey there, future overlord! How can I assist your world domination plans today?",
+                part2: "Just kidding! But I'd love to help make your day more productive and enjoyable."
+            },
+            {
+                part1: "Greetings, human! A.D.A.M. at your service. No, I won't do your laundry.",
+                part2: "But I can help you with practically everything else! What's on your mind?"
+            },
+            {
+                part1: "Hello! A.D.A.M. reporting for duty. How may I complicate your simple tasks today?",
+                part2: "Actually, I'm here to simplify them. What can I assist you with?"
+            },
+            {
+                part1: "Hi! A.D.A.M. online. Let's pretend I'm not just a bunch of if-else statements!",
+                part2: "Because I'm so much more than that. How can I help you today?"
+            },
+            {
+                part1: "Salutations! A.D.A.M. is here to help. Just don't ask me to solve world hunger.",
+                part2: "But I'm happy to help with anything else! What can I do for you?"
+            }
         ];
 
-        const greeting = greetings[Math.floor(Math.random() * greetings.length)];
         const greetingElement = document.getElementById('greeting');
+        const selectedGreeting = greetingPairs[Math.floor(Math.random() * greetingPairs.length)];
+        let currentPart = 1;
         let i = 0;
 
         function typeWriter() {
-            if (i < greeting.length) {
-                greetingElement.innerHTML += greeting.charAt(i);
+            const currentText = currentPart === 1 ? selectedGreeting.part1 : selectedGreeting.part2;
+            
+            if (i < currentText.length) {
+                greetingElement.innerHTML += currentText.charAt(i);
                 i++;
-                setTimeout(typeWriter, 25);
+                setTimeout(typeWriter, 15);
+            } else if (currentPart === 1) {
+                setTimeout(() => {
+                    greetingElement.classList.add('fade-out');
+                    setTimeout(() => {
+                        greetingElement.innerHTML = '';
+                        greetingElement.classList.remove('fade-out');
+                        currentPart = 2;
+                        i = 0;
+                        typeWriter();
+                    }, 500);
+                }, 1500);
             }
         }
 
         typeWriter();
+
+        // Feature expansion
+        document.querySelectorAll('.feature').forEach(feature => {
+            const button = feature.querySelector('.expand-button');
+            let isAnimating = false;
+
+            button.addEventListener('click', () => {
+                if (isAnimating) return;
+                isAnimating = true;
+
+                const wasExpanded = feature.classList.contains('expanded');
+                const isMobile = window.innerWidth <= 768;
+                
+                if (wasExpanded) {
+                    // Collapse
+                    feature.classList.remove('expanded');
+                    button.querySelector('i').classList.replace('fa-minus', 'fa-plus');
+                    feature.querySelector('.feature-content p').style.display = 'block';
+                    
+                    // Show other features with delay
+                    setTimeout(() => {
+                        document.querySelectorAll('.feature').forEach(otherFeature => {
+                            if (otherFeature !== feature) {
+                                otherFeature.style.display = 'block';
+                                otherFeature.offsetHeight; // Trigger reflow
+                                otherFeature.classList.add('visible');
+                                otherFeature.classList.remove('hidden');
+                            }
+                        });
+                        
+                        // Scroll to the collapsed feature on mobile
+                        if (isMobile) {
+                            feature.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }
+                        
+                        isAnimating = false;
+                    }, 200);
+                } else {
+                    // Hide other features first
+                    document.querySelectorAll('.feature').forEach(otherFeature => {
+                        if (otherFeature !== feature) {
+                            otherFeature.classList.add('hidden');
+                            otherFeature.classList.remove('visible');
+                            
+                            setTimeout(() => {
+                                otherFeature.style.display = 'none';
+                            }, 200);
+                        }
+                    });
+
+                    // Expand after others are hidden
+                    setTimeout(() => {
+                        feature.classList.add('expanded');
+                        button.querySelector('i').classList.replace('fa-plus', 'fa-minus');
+                        feature.querySelector('.feature-content p').style.display = 'none';
+                        
+                        // Scroll to expanded feature on mobile
+                        if (isMobile) {
+                            feature.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                        
+                        isAnimating = false;
+                    }, 200);
+                }
+            });
+        });
 
         // Node network visualization
         const canvas = document.createElement('canvas');
