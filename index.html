@@ -35,6 +35,7 @@
 
         header {
             position: absolute;
+            top: 0;
             left: 50%;
             transform: translate(-50%);
             width: 100%;
@@ -58,18 +59,25 @@
             font-weight: 700;
             text-align: center;
             margin: 0;
-           color: #00aaff;
+            color: #00aaff;
         }
 
+        /* Updated Hero Styles */
         .hero {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
             height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            position: relative;
             overflow: hidden;
+            z-index: 1;
+            will-change: transform, opacity;
+            transition: transform 0.5s ease, opacity 0.5s ease;
         }
 
         #assistant-visualization {
@@ -79,11 +87,19 @@
             width: 100%;
             height: 100%;
             z-index: 1;
+            transform: scale(1);
+            transition: transform 0.5s ease;
+            will-change: transform;
         }
 
         .hero-content {
             position: relative;
+            margin-top: -1rem;
             z-index: 2;
+            transform: scale(1);
+            opacity: 1;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            will-change: transform, opacity;
         }
 
         #greeting {
@@ -127,6 +143,12 @@
 
         #features {
             background-color: #11141c;
+        }
+
+        .features-wrapper {
+            position: relative;
+            z-index: 2;
+            margin-top: 100vh;
         }
 
         .feature-grid {
@@ -238,6 +260,16 @@
         #greeting.fade-out {
             opacity: 0;
         }
+
+        footer {
+            position: relative;
+            background-color: #101113;
+            color: #e0e0e0;
+            text-align: center;
+            padding: 2rem 0;
+            z-index: 2;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 2rem;
@@ -306,14 +338,19 @@
                 transform: translateY(0);  /* Ensure no Y translation when expanded */
             }
         }
+
+        /* Smooth Scroll Behavior */
+        html {
+            scroll-behavior: smooth;
+        }
     </style>
 </head>
 <body>
-    <header>
-            <h1>A.D.A.M. AI Assistant</h1>
-    </header>
     <main>
         <section class="hero">
+            <header>
+                <h1>A.D.A.M. AI Assistant</h1>
+            </header>
             <div id="assistant-visualization"></div>
             <div class="hero-content">
                 <div id="greeting"></div>
@@ -410,13 +447,13 @@
     </main>
 
     <footer>
-        <div class="container">
+        <div class="footer">
             <p>&copy; 2024 A.D.A.M. AI Assistant. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        // Updated greetings with two parts
+        // Existing greetings with two parts
         const greetingPairs = [
             {
                 part1: "Hey there, future overlord! How can I assist your world domination plans today?",
@@ -503,7 +540,7 @@
                         }
                         
                         isAnimating = false;
-                    }, 200);
+                    }, 400);
                 } else {
                     // Hide other features first
                     document.querySelectorAll('.feature').forEach(otherFeature => {
@@ -513,7 +550,7 @@
                             
                             setTimeout(() => {
                                 otherFeature.style.display = 'none';
-                            }, 200);
+                            }, 400);
                         }
                     });
 
@@ -529,7 +566,7 @@
                         }
                         
                         isAnimating = false;
-                    }, 200);
+                    }, 400);
                 }
             });
         });
@@ -619,6 +656,68 @@
 
         drawNodes();
 
+        // Parallax Scroll Effect
+        (function() {
+            const hero = document.querySelector('.hero');
+            const heroContent = document.querySelector('.hero-content');
+            const visualization = document.getElementById('assistant-visualization');
+            const features = document.getElementById('features');
+
+            // Maximum scroll value where the hero starts to scale down
+            let maxScroll = window.innerHeight;
+
+            // Throttle scroll events for performance
+            let ticking = false;
+
+            function onScroll() {
+                const scrollY = window.scrollY;
+
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        // Calculate scroll percentage (0 to 1)
+                        const scrollFactor = 2; // Adjust this factor as needed
+                        const scrollPercent = Math.min((scrollY / maxScroll) * scrollFactor, 1);
+
+                        // Apply scaling to hero content
+                        const contentScale = 1 - 0.4 * scrollPercent; // 85% at max
+                        heroContent.style.transform = `scale(${contentScale})`;
+
+                        // Apply scaling to visualization
+                        const vizScale = 1 - 0.20 * scrollPercent; // 90% at max
+                        visualization.style.transform = `scale(${vizScale})`;
+
+                        // Apply opacity to hero content
+                        const contentOpacity = 1 - 0.5 * scrollPercent; // 50% at max
+                        heroContent.style.opacity = contentOpacity;
+
+                        ticking = false;
+                    });
+
+                    ticking = true;
+                }
+            }
+
+            window.addEventListener('scroll', onScroll);
+
+            // Ensure the features section is positioned correctly
+            // Wrap features in a container if not already wrapped
+            const featuresParent = features.parentNode;
+            if (!featuresParent.classList.contains('features-wrapper')) {
+                const featuresWrapper = document.createElement('div');
+                featuresWrapper.classList.add('features-wrapper');
+                featuresParent.insertBefore(featuresWrapper, features);
+                featuresWrapper.appendChild(features);
+            }
+
+            // Adjust on resize
+            window.addEventListener('resize', () => {
+                // Update maxScroll if window size changes
+                maxScroll = window.innerHeight;
+            });
+
+        })();
+
+        // Smooth Scroll for "Learn more" button
         document.getElementById('learn-more-button').addEventListener('click', function(event) {
             event.preventDefault();
             document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
