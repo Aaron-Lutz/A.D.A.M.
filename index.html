@@ -151,10 +151,24 @@
         }
 
         .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            display: flex;
             gap: 2rem;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            padding: 1rem;
+            margin: -1rem;  /* Compensate for padding */
+            position: relative;
+            scrollbar-width: none;  /* Firefox */
+            -ms-overflow-style: none;  /* IE and Edge */
         }
+
+        .feature-grid::-webkit-scrollbar {
+            display: none;
+        }
+
 
         .feature {
             text-align: left;
@@ -167,6 +181,58 @@
             max-height: 200px; /* Initial max-height for non-expanded state */
             position: relative;
             overflow: hidden;
+            flex: 0 0 calc(25% - 1.5rem);  /* Show 4 items with gap consideration */
+            scroll-snap-align: start;
+            max-width: 215px;  /* Minimum width for mobile */
+            transform: translateZ(0);  /* Performance optimization */
+        }
+
+        .feature:last-child {
+            position: relative;
+        }
+
+        .feature:last-child::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -50px;
+            width: 50px;
+            height: 100%;
+            background: linear-gradient(to right, rgba(26, 31, 46, 0), #11141c);
+            pointer-events: none;
+        }
+
+        .carousel-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .carousel-button {
+            background: linear-gradient(135deg, #00aaff, #004fe0);
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .carousel-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .carousel-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .feature-grid > div:hover {
@@ -180,16 +246,17 @@
         }
 
         .feature.expanded {
+            min-width: 95%;
             text-align: left;
             grid-column: 1 / -1;
             margin: 1rem 0;
             height: auto;
             max-height: 800px; /* Increased max-height for expanded state */
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .feature:not(.expanded) {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         /* Add transition for feature visibility */
@@ -307,10 +374,12 @@
 
             .feature {
                 max-width: 100%;
+                min-width: 90%;
                 margin: 0 auto;
             }
 
             .feature.expanded {
+                min-width: 95%;
                 grid-column: auto;  /* Reset grid column */
                 margin: 1rem auto;
             }
@@ -737,6 +806,84 @@
         document.getElementById('learn-more-button').addEventListener('click', function(event) {
             event.preventDefault();
             document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Carousel Navigation
+        const featureGrid = document.querySelector('.feature-grid');
+        
+        // Add navigation buttons after the feature grid
+        const navContainer = document.createElement('div');
+        navContainer.className = 'carousel-nav';
+        navContainer.innerHTML = `
+            <button class="carousel-button prev" aria-label="Previous">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="carousel-button next" aria-label="Next">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        `;
+        featureGrid.parentNode.insertBefore(navContainer, featureGrid.nextSibling);
+
+        const prevButton = navContainer.querySelector('.prev');
+        const nextButton = navContainer.querySelector('.next');
+
+        // Scroll handling
+        function updateButtonStates() {
+            const isAtStart = featureGrid.scrollLeft <= 0;
+            const isAtEnd = featureGrid.scrollLeft >= featureGrid.scrollWidth - featureGrid.clientWidth - 10;
+            
+            prevButton.disabled = isAtStart;
+            nextButton.disabled = isAtEnd;
+        }
+
+        function scrollCarousel(direction) {
+            const itemWidth = featureGrid.querySelector('.feature').offsetWidth + 32; // Width + gap
+            const currentScroll = featureGrid.scrollLeft;
+            const targetScroll = direction === 'next' 
+                ? currentScroll + itemWidth
+                : currentScroll - itemWidth;
+
+            featureGrid.scrollTo({
+                left: targetScroll,
+                behavior: 'smooth'
+            });
+        }
+
+        prevButton.addEventListener('click', () => scrollCarousel('prev'));
+        nextButton.addEventListener('click', () => scrollCarousel('next'));
+        featureGrid.addEventListener('scroll', updateButtonStates);
+
+        // Initial button state
+        updateButtonStates();
+
+        // Handle touch events for smooth mobile scrolling
+        let startX;
+        let scrollLeft;
+        let isDown = false;
+
+        featureGrid.addEventListener('mousedown', (e) => {
+            isDown = true;
+            startX = e.pageX - featureGrid.offsetLeft;
+            scrollLeft = featureGrid.scrollLeft;
+            featureGrid.style.cursor = 'grabbing';
+        });
+
+        featureGrid.addEventListener('mouseleave', () => {
+            isDown = false;
+            featureGrid.style.cursor = 'grab';
+        });
+
+        featureGrid.addEventListener('mouseup', () => {
+            isDown = false;
+            featureGrid.style.cursor = 'grab';
+        });
+
+        featureGrid.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - featureGrid.offsetLeft;
+            const walk = (x - startX) * 2;
+            featureGrid.scrollLeft = scrollLeft - walk;
         });
     </script>
 </body>
